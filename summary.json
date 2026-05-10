@@ -1,0 +1,26 @@
+{
+  "scenarios": [
+    {
+      "id": "bel_future_01",
+      "stock": "BEL",
+      "window": "12M",
+      "kind": "future",
+      "tags": [
+        "defence",
+        "electronics",
+        "order_book",
+        "margins",
+        "govt"
+      ],
+      "query": "Analyze Bharat Electronics Ltd (BEL) over the next 12 months. Focus on defence capex and ministry ordering cadence, order-book composition (radars/communication/avionics/ naval vs army/air programmes), execution risk and revenue recognition, margin drivers (mix toward platforms vs components, pricing norms), export pipeline vs geo-political constraints, working capital and receivables from PSU/defence customers, competitive positioning vs imports/private peers, and policy/indigenisation tailwinds or procurement delays. Provide base/bull/bear with rough probability weights, INR fair-value or return bands with stated assumptions, 5–7 quarterly KPIs (order intake, book-to-bill, execution/Revenue growth, EBITDA margin, receivable days) with invalidation triggers, and key events that could shift the trajectory."
+    }
+  ],
+  "elapsed_s": 3449.52,
+  "models": [
+    "vidur",
+    "claude",
+    "deepseek",
+    "gpt54",
+    "o4mini"
+  ]
+}
