@@ -7,6 +7,17 @@ const REPO_ROOT = path.resolve(__dirname, "..", "..");
 const OUT_DIR = path.resolve(__dirname, "..", "public", "data");
 const RAW_DIR = path.join(OUT_DIR, "raw");
 
+/** Repo-root JSON that must never be treated as scenario exports */
+const SKIP_ROOT_JSON = new Set([
+  "summary.json",
+  "package.json",
+  "package-lock.json",
+  "vercel.json",
+  "tsconfig.json",
+  "jsconfig.json",
+  "components.json",
+]);
+
 function readSummaryMeta(root) {
   try {
     const p = path.join(root, "summary.json");
@@ -25,7 +36,7 @@ function readSummaryMeta(root) {
 function buildEntry(file, data) {
   const scenario = data?.scenario;
   if (!scenario?.id) {
-    throw new Error(`Missing scenario.id in ${file}`);
+    return null;
   }
 
   const responses = data?.responses && typeof data.responses === "object" ? data.responses : {};
@@ -79,7 +90,7 @@ function buildEntry(file, data) {
 
 function main() {
   const names = fs.readdirSync(REPO_ROOT).filter((n) => n.endsWith(".json"));
-  const scenarioFiles = names.filter((n) => n !== "summary.json").sort();
+  const scenarioFiles = names.filter((n) => !SKIP_ROOT_JSON.has(n)).sort();
 
   fs.mkdirSync(RAW_DIR, { recursive: true });
 
@@ -90,6 +101,10 @@ function main() {
     const full = path.join(REPO_ROOT, file);
     const data = JSON.parse(fs.readFileSync(full, "utf8"));
     const entry = buildEntry(file, data);
+    if (!entry) {
+      console.warn(`[catalog] Skipping ${file}: not a scenario export (missing scenario.id)`);
+      continue;
+    }
     entries.push(entry);
     idCounts.set(entry.id, (idCounts.get(entry.id) ?? 0) + 1);
 
